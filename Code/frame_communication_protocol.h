@@ -1,5 +1,5 @@
-#ifndef __FRAME_COMMUNICATION_PROTOCOL__
-#define __FRAME_COMMUNICATION_PROTOCOL__
+#ifndef __FRAME_COMMUNICATION_PROTOCOL_H__
+#define __FRAME_COMMUNICATION_PROTOCOL_H__
 
 // Include standard header files
 #include<stdio.h>
@@ -28,14 +28,14 @@
 #define FRAME_CODE_ACK                0xF0
 #define FRAME_CODE_NACK               0xFF
 
-#define FRAME_BIT_POS                 0
-#define FRAME_BIT_MASK                0x1F
+#define FRAME_CODE_POS                 0
+#define FRAME_CODE_MASK                0x1F
 
 // Create frame header
-#define FRAME_BIT_MASK                0xFF
+#define FRAME_HEADER_MASK             0xFF
 #define FRAME_HEADER(M, F)            (((M&MOTOR_BIT_MASK)<<MOTOR_BIT_MASK | \\
-                                       (F&FRAME_BIT_MASK)<<FRAME_BIT_MASK) & \\
-                                        FRAME_BIT_MASK)
+                                       (F&FRAME_CODE_MASK)<<FRAME_CODE_POS) & \\
+                                        FRAME_HEADER_MASK)
 
 // Define error codes
 #define ERROR_CODE_NONE               0x00
@@ -186,4 +186,4 @@
 #define REG_ID_PWBDID                0x73
 #define REG_TYPE_PWBDID              uint32_t
 
-#endif //__FRAME_COMMUNICATION_PROTOCOL__
+#endif //__FRAME_COMMUNICATION_PROTOCOL_H__
