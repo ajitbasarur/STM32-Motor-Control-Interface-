@@ -7,12 +7,16 @@
 
 using namespace std;
 
-class MC_INTERFACE_CLASS {
+class mc_interface_class {
 	// Define variables
 	public:
 
 	// Define functions
 	public:
+		// Constructor
+		mc_interface_class();
+		// Destructor
+		~mc_interface_class();
 		// Define overloaded function
 		// Set register
 		uint8_t set_reg(uint8_t ui8Reg, int8_t i8RegVal);
