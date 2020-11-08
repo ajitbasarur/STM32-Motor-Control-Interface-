@@ -1,9 +1,11 @@
 #ifndef __FRAME_COMMUNICATION_PROTOCOL_H__
 #define __FRAME_COMMUNICATION_PROTOCOL_H__
 
+#ifdef __cplusplus  
+extern "C" { 
+#endif
 // Include standard header files
-#include<stdio.h>
-#include<stdint.h>
+
 
 // Define the MACROS used for frame communication
 // By default, motor number is zero.  The maximum number is 7
@@ -185,5 +187,26 @@
 
 #define REG_ID_PWBDID                0x73
 #define REG_TYPE_PWBDID              uint32_t
+
+// Define motor commands
+#define MOTOR_CMD_START_MOTOR        0x01
+#define MOTOR_CMD_STOP_MOTOR         0x02
+#define MOTOR_CMD_STOP_RAMP          0x03
+#define MOTOR_CMD_START_STOP         0x06
+#define MOTOR_CMD_FAULT_ACK          0x07
+#define MOTOR_CMD_ENCODER_ALIGN      0x08
+#define MOTOR_CMD_IQDREF_CLEAR       0x09
+
+
+
+
+
+// Create function prototypes
+
+// uint8_t set_reg(uint8_t ui8Register, uint32_t ui)
+
+#ifdef __cplusplus 
+} 
+#endif 
 
 #endif //__FRAME_COMMUNICATION_PROTOCOL_H__
