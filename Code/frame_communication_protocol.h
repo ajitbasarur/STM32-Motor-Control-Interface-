@@ -52,20 +52,138 @@
 
 
 // Define register ids and their corresponding size
-// 0x1 - 1 byte, 0x4 - 4 bytes
-#define REGI_ID_TARGET_MOTOR          0x0
-#define REGI_ID_SIZE_TARGET_MOTOR     uint8_t
+#define REG_ID_TARGET_MOTOR          0x0
+#define REG_TYPE_TARGET_MOTOR        uint8_t
 
-#define REGI_ID_FAULT_FLAGS           0x1
-#define REGI_ID_SIZE_FAULT_FLAGS      uint32_t
+#define REG_ID_FAULT_FLAGS           0x1
+#define REG_TYPE_FAULT_FLAGS         uint32_t
 
-#define REGI_ID_STATUS                0x2
-#define REGI_ID_SIZE_STATUS           0x1
+#define REG_ID_STATUS                0x2
+#define REG_TYPE_STATUS              uint8_t
 
-#define REGI_ID_CONTROL_MODE          0x3
-#define REGI_ID_SIZE_CONTROL_MODE     0x1
+#define REG_ID_CONTROL_MODE          0x3
+#define REG_TYPE_CONTROL_MODE        uint8_t
 
-#define REGI_ID_SPEED_REF             0x4
-#define REGI_ID_SIZE_CONTROL_MODE     0x1
+// Speed loop parameters
+#define REG_ID_SPEED_REF             0x4
+#define REG_TYPE_SPEED_REF           int32_t
+
+#define REG_ID_SPEED_KP              0x5
+#define REG_TYPE_SPEED_KP            int16_t
+
+#define REG_ID_SPEED_KI              0x6
+#define REG_TYPE_SPEED_KI            int16_t
+
+#define REG_ID_SPEED_KD              0x7
+#define REG_TYPE_SPEED_KD            int16_t
+
+#define REG_ID_RAMP_FINAL_SPEED      0x5B
+#define REG_TYPE_RAMP_FINAL_SPEED    int32_t
+
+#define REG_ID_SPEED_KP_DIV          0x6E
+#define REG_TYPE_SPEED_KP_DIV        int16_t
+
+#define REG_ID_SPEED_KI_DIV          0x6F
+#define REG_TYPE_SPEED_KI_DIV        int16_t
+
+// FOC loop parameters
+// Iq - quadrature current
+#define REG_ID_TORQUE_REF            0x8
+#define REG_TYPE_TORQUE_REF          int16_t
+
+#define REG_ID_TORQUE_KP             0x9
+#define REG_TYPE_TORQUE_KP           int16_t
+
+#define REG_ID_TORQUE_KI             0xA
+#define REG_TYPE_TORQUE_KI           int16_t
+
+#define REG_ID_TORQUE_KD             0xB
+#define REG_TYPE_TORQUE_KD           int16_t
+
+
+// Id - direct current
+#define REG_ID_FLUX_REF              0xC
+#define REG_TYPE_FLUX_REF            int16_t
+
+#define REG_ID_FLUX_KP               0xD
+#define REG_TYPE_FLUX_KP             int16_t
+
+#define REG_ID_FLUX_KI               0xE
+#define REG_TYPE_FLUX_KI             int16_t
+
+#define REG_ID_FLUX_KD               0xF
+#define REG_TYPE_FLUX_KD             int16_t
+
+// Other parameters of motor control library
+// that are measured on-board
+#define REG_ID_BUS_VOLTAGE           0x19
+#define REG_TYPE_BUS_VOLTAGE         uint16_t
+
+#define REG_ID_HEATS_TEMP            0x1A
+#define REG_TYPE_HEATS_TEMP          uint16_t
+
+#define REG_ID_MOTOR_POWER           0x1B
+#define REG_TYPE_MOTOR_POWER         uint16_t
+
+#define REG_ID_SPEED_MEAS            0x1E
+#define REG_TYPE_SPEED_MEAS          int32_t
+
+#define REG_ID_TORQUE_MEAS           0x1F
+#define REG_TYPE_TORQUE_MEAS         int16_t
+
+#define REG_ID_FLUX_MEAS             0x20
+#define REG_TYPE_FLUX_MEAS           int16_t
+
+#define REG_ID_IA_MEAS               0x23
+#define REG_TYPE_IA_MEAS             int16_t
+
+#define REG_ID_IB_MEAS               0x24
+#define REG_TYPE_IB_MEAS             int16_t
+
+#define REG_ID_IALPHA_MEAS           0x25
+#define REG_TYPE_IALPHA_MEAS         int16_t
+
+#define REG_ID_IBETA_MEAS            0x26
+#define REG_TYPE_IBETA_MEAS          int16_t
+
+#define REG_ID_IQ_MEAS               0x27
+#define REG_TYPE_IQ_MEAS             int16_t
+
+#define REG_ID_ID_MEAS               0x28
+#define REG_TYPE_ID_MEAS             int16_t
+
+#define REG_ID_VQ_MEAS               0x2B
+#define REG_TYPE_VQ_MEAS             int16_t
+
+#define REG_ID_VD_MEAS               0x2C
+#define REG_TYPE_VD_MEAS             int16_t
+
+#define REG_ID_VALPHA_MEAS           0x2D
+#define REG_TYPE_VALPHA_MEAS         int16_t
+
+#define REG_ID_VBETA_MEAS            0x2E
+#define REG_TYPE_VBETA_MEAS          int16_t
+
+#define REG_ID_MEAS_EL_ANGLE         0x2F
+#define REG_TYPE_MEAS_EL_ANGL        int16_t
+
+#define REG_ID_MEAS_ROT_SPEED        0x30
+#define REG_TYPE_MEAS_ROT_SPEED      int16_t
+
+#define REG_ID_MAX_APP_SPEED         0x3F
+#define REG_TYPE_MAX_APP_SPEED       uint32_t
+
+#define REG_ID_MIN_APP_SPEED         0x40
+#define REG_TYPE_MIN_APP_SPEED       uint32_t
+
+#define REG_ID_IQ_SPEED_MODE         0x41
+#define REG_TYPE_MIN_APP_SPEED       int16_t
+
+// Identification numbers of control and power board
+#define REG_ID_CTRBDID               0x72
+#define REG_TYPE_CTRBDID             uint32_t
+
+#define REG_ID_PWBDID                0x73
+#define REG_TYPE_PWBDID              uint32_t
 
 #endif //__FRAME_COMMUNICATION_PROTOCOL__
