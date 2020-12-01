@@ -46,12 +46,13 @@ def read_register(reg, payload_length):
     
 # Set the serial port settings
 serialPort = Serial (
-               port = 'COM4',
+               #port = 'COM4',
+               port = '/dev/cu.usbmodem14203',
                baudrate = 115200,
                parity = serial.PARITY_NONE,
                stopbits = serial.STOPBITS_ONE,
-               bytesize = serial.EIGHTBITS,
-               timeout = 1000
+               bytesize = serial.EIGHTBITS
+               #timeout = 0
            )
 
 # Pint the name of serial port
@@ -66,11 +67,13 @@ else:
     
 
 # Read the firmware version
-#mc_version = read_firmware_version();
-#print("The firmware version is ", mc_version);
+mc_version = read_firmware_version();
+print("The firmware version is ", mc_version);
+
+x = serialPort.inWaiting()
 
 reg = 0x05;
-payload_length = 2;
+payload_length = 1;
 reg_value = read_register(reg, payload_length);
 print("The register ", reg, " value is ",reg_value);
     
