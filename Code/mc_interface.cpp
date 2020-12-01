@@ -11,13 +11,15 @@ void mc_interface_class::~mc_interface_class() {
 	cout << "mc_interface_class destructor()\n";
 }
 
-uint8_t mc_interface_class::compute_checksum(uint8_t ui8Header, uint8_t *pui8Payload, uint8_t ui8Len`) {
+uint8_t mc_interface_class::compute_checksum(uint8_t ui8Header, uint8_t *pui8Payload, uint8_t ui8Len) {
 	// Compute the accumulator
 	uint16_t ui16Accumulator = ui8Header + ui8Len;
 	uint8_t ui8CheckSum = 0;
 
-	for(i=0;i<ui8Len;i++) {
-		ui16Accumulator += (pui8Payload[i] & 0xFF);
+	if (NULL != pui8Payload){
+		for(i=0;i<ui8Len;i++) {
+			ui16Accumulator += (pui8Payload[i] & 0xFF);
+		}
 	}
 	
 	// Low-byte
@@ -43,6 +45,15 @@ uint8_t mc_interface_class::set_reg(uint8_t ui8Reg, int8_t i8RegVal) {
 
 	ui8FrameSize += sizeof(i8RegVal) + sizeof(ui8CheckSum);
 
-	uint8_t *ui8Frame = new uint8_t(ui8FrameSize);
+	struct frame stSetRegFram(ui8PayloadLength, ui8Header, ui8CheckSum);
+	// Copy the payload
+	memcpy(stSetRegFram.ui8Payload, &i8RegVal, ui8PayloadLength);
+}
 
+uint8_t  mc_interface_class::get_firmware_version(uint8_t *pui8Buffer, uint8_t ui8BuffSize) {
+	// Create header
+	uint8_t ui8Header = FRAME_HEADER(MOTOR_NUMBER, FRAME_CODE_GET_FW_VERSION);
+		// Compute the checksum
+		uint8_t ui8CheckSum = compute_checksum(ui8Header, NULL, 0);
+	
 }

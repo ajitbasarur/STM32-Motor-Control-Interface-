@@ -43,7 +43,24 @@ class mc_interface_class {
 		uint8_t set_current_reference(int16_t i16IqRef, int16_t i16IdRef);
 
 		uint8_t get_firmware_version(uint8_t *pui8Buffer, uint8_t ui8BuffSize);
-		
+	
+	private:
+		struct frame {
+			uint8_t ui8FrameHeader;
+			uint8_t ui8PayloadLength;
+			uint8_t ui8Checksum;
+			uint8_t ui8Payload[];
+			frame(uint8_t length=1, uint8_t header, uint8_t checksum) {
+				: ui8PayloadLength(ui8length),
+				  ui8Payload(new uint8_t[ui8length]),
+				  ui8FrameHeader(header),
+				  ui8Checksum(checksum);
+			}
+			~frame(){
+				delete [] ui8Payload;
+			}
+		};
+
 
 }
 
