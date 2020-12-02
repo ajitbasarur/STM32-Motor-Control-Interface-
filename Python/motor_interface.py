@@ -229,6 +229,11 @@ def set_control_mode(value):
     reg_size = 1;
     return write_register(reg, reg_size, value);
 
+def set_ramp_final_speed(value):
+    reg = 0x5B;
+    reg_size = 4;
+    return write_register(reg, reg_size, value);
+
 def set_speed_Kp(value):
     reg = 0x05;
     reg_size = 2;
@@ -341,22 +346,19 @@ def exec_cmd_iqdref_clear():
 #############################################################################
 def set_ramp(rampValue, rampDuration):
     header = 0x07;
-    payload = (rampValue & 0xFFFFFFFF) << 16
-    print(payload)
-    payload |= (rampDuration & 0xFFFF);
-    print(payload)
+    payload = bytearray();
+    m = rampValue.to_bytes(4, byteorder='big', signed=False);
+    n = rampDuration.to_bytes(2, byteorder='big', signed=False);
+    payload = m+n
+    print(payload.hex())
     payload_length = 6;
-    Accumulator = header + payload_length;
-    
-    # Add payload value to the checksum
-    for i in range(0, payload_length):
-        Accumulator = Accumulator + ((payload >> (8*i)) & 0xFF);
+    Accumulator = header + payload_length + sum(payload);
         
     # Add register value to the checksum
-    checksum = ((Accumulator & 0xFF) + ((Accumulator >> 8) & 0xFF)) & 0xFF;    
+    #checksum = ((Accumulator & 0xFF) + ((Accumulator >> 8) & 0xFF)) & 0xFF;
+    checksum = sum(Accumulator.to_bytes(2, 'big'))    
     print("Checksum value is ", checksum)
     errorCode = 0;
-    
 
     packet = bytearray();
     # Append the header
@@ -364,8 +366,7 @@ def set_ramp(rampValue, rampDuration):
     # Append the length
     packet.append(payload_length);
     # Append the payload
-    for i in range(0, payload_length):
-        packet.append((payload >> (8*i)) & 0xFF);
+    packet = packet + payload;
     # Append the checksum
     packet.append(checksum);
     serialPort.write(packet);
@@ -453,7 +454,7 @@ if x > 0:
 # else:
 #     print("The command execution failed with an error code", erroCode);
     
-set_ramp(0x1000, 0x2999);
+set_ramp(1000, 60);
     
 # Close the serial port
 serialPort.close();
