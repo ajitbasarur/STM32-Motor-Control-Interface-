@@ -279,7 +279,6 @@ def execute_command(command):
     payload_length = 1;
     Accumulator = header + payload + payload_length;
     
-    # Add register value to the checksum
     checksum = ((Accumulator & 0xFF) + ((Accumulator >> 8) & 0xFF)) & 0xFF;    
     print("Checksum value is ", checksum)
     errorCode = 0;
@@ -290,7 +289,8 @@ def execute_command(command):
     # Append the length
     packet.append(payload_length);
     # Append the payload
-    packet.append(payload);
+    for i in range(0, payload_length):
+        packet.append((payload >> (8*i)) & 0xFF);
     # Append the checksum
     packet.append(checksum);
     serialPort.write(packet);
@@ -305,7 +305,83 @@ def execute_command(command):
     success = False;
     if 0xF0  == ack:
         success = True;
-        print("Register write is successfull\n")
+        print("Command execution is successfull\n")
+    else:
+        # For a negative acknowledge, there is an associated errorcode
+        # Read the error code
+        #reg_response = serialPort.read(1);
+        errorCode = reg_response[1];
+        print("Error code is", errorCode);
+        
+    return success, errorCode;
+
+def exec_cmd_start_motor():
+    return execute_command(0x01);
+
+def exec_cmd_stop_motor():
+    return execute_command(0x02);
+
+def exec_cmd_stop_ramp():
+    return execute_command(0x03);
+
+def exec_cmd_start_stop():
+    return execute_command(0x06);
+
+def exec_cmd_fault_ack():
+    return execute_command(0x07);
+
+def exec_cmd_enc_align():
+    return execute_command(0x08);
+
+def exec_cmd_iqdref_clear():
+    return execute_command(0x09);
+
+#############################################################################
+# Set RAMP
+#############################################################################
+def set_ramp(rampValue, rampDuration):
+    header = 0x07;
+    payload = (rampValue & 0xFFFFFFFF) << 16
+    print(payload)
+    payload |= (rampDuration & 0xFFFF);
+    print(payload)
+    payload_length = 6;
+    Accumulator = header + payload_length;
+    
+    # Add payload value to the checksum
+    for i in range(0, payload_length):
+        Accumulator = Accumulator + ((payload >> (8*i)) & 0xFF);
+        
+    # Add register value to the checksum
+    checksum = ((Accumulator & 0xFF) + ((Accumulator >> 8) & 0xFF)) & 0xFF;    
+    print("Checksum value is ", checksum)
+    errorCode = 0;
+    
+
+    packet = bytearray();
+    # Append the header
+    packet.append(header);
+    # Append the length
+    packet.append(payload_length);
+    # Append the payload
+    for i in range(0, payload_length):
+        packet.append((payload >> (8*i)) & 0xFF);
+    # Append the checksum
+    packet.append(checksum);
+    serialPort.write(packet);
+    
+    print(packet)
+    # For a positive acknowledge, there is no error code
+    # It seems like, the MC interface sends double acknowlegment
+    reg_response = serialPort.read(2);
+    
+    success = False;
+    print(reg_response);
+    ack = reg_response[0];
+    success = False;
+    if 0xF0  == ack:
+        success = True;
+        print("Ramp Setup is successfull\n")
     else:
         # For a negative acknowledge, there is an associated errorcode
         # Read the error code
@@ -348,22 +424,36 @@ else:
 
 
 
-#success, reg_value, erroCode = read_heat_sink_temperature();
-success, erroCode = set_flux_Kp(541);
-if True == success:
-    print("The register write is successfull\n");
-else:
-    print("Register write failed with error code", erroCode);
+# #success, reg_value, erroCode = read_heat_sink_temperature();
+# success, erroCode = set_flux_Ki(0xFFFF);
+# if True == success:
+#     print("The register write is successfull\n");
+# else:
+#     print("Register write failed with error code", erroCode);
+    
+# x = serialPort.inWaiting();
+# if x > 0:
+#     junk_data = serialPort.read(x);
+    
+# success, reg_value, erroCode = read_flux_Ki();
+# if True == success:
+#     print("The register value is \n", reg_value);
+# else:
+#     print("Register read failed with error code", erroCode);
     
 x = serialPort.inWaiting();
 if x > 0:
     junk_data = serialPort.read(x);
+    print(x)
     
-success, reg_value, erroCode = read_flux_Kp();
-if True == success:
-    print("The register value is \n", reg_value);
-else:
-    print("Register read failed with error code", erroCode);
+# # Start the motor
+# success, erroCode = exec_cmd_enc_align();    
+# if True == success:
+#     print("The command execution is successfull\n");
+# else:
+#     print("The command execution failed with an error code", erroCode);
+    
+set_ramp(0x1000, 0x2999);
     
 # Close the serial port
 serialPort.close();
