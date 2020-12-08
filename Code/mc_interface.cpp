@@ -1,7 +1,7 @@
 // It defines all the functions of the class mc_interface
 
 #include<iostream>
-#include<mc_interface>
+#include"mc_interface.hpp"
 
 void mc_interface_class::mc_interface_class() {
 	cout << "mc_interface_class constructor()\n";
@@ -11,43 +11,19 @@ void mc_interface_class::~mc_interface_class() {
 	cout << "mc_interface_class destructor()\n";
 }
 
-uint8_t mc_interface_class::compute_checksum(uint8_t ui8Header, uint8_t *pui8Payload, uint8_t ui8Len) {
-	// Compute the accumulator
-	uint16_t ui16Accumulator = ui8Header + ui8Len;
-	uint8_t ui8CheckSum = 0;
-
-	if (NULL != pui8Payload){
-		for(i=0;i<ui8Len;i++) {
-			ui16Accumulator += (pui8Payload[i] & 0xFF);
-		}
-	}
-	
-	// Low-byte
-	ui8CheckSum = (ui16Accumulator & 0xFF);
-	// High-byte
-	ui8CheckSum += (ui16Accumulator>>8 & 0xFF);
-
-	return ui8CheckSum;
-}
-
 // Set the 8-bit register
-uint8_t mc_interface_class::set_reg(uint8_t ui8Reg, int8_t i8RegVal) {
+uint8_t mc_interface_class::set_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *pi8RegVal) {
 	// Create header
 	uint8_t ui8Header = FRAME_HEADER(MOTOR_NUMBER, FRAME_CODE_SET_REG);
-	// Set the length
-	uint8_t ui8PayloadLength = sizeof(i8RegVal);
-	// Compute the checksum
-	uint8_t ui8CheckSum = compute_checksum(ui8Header, &i8RegVal, ui8PayloadLength);
+	
+	// Create the frame message
+	friend class frame_class cSetRegFrame(ui8Header, ui8RegSize, pi8RegVal);
+	// Send the frame
+}
 
-	// Format a message
-	// Frame memory size
-	uint8_t ui8FrameSize = sizeof(ui8Header) + sizeof(ui8PayloadLength);
-
-	ui8FrameSize += sizeof(i8RegVal) + sizeof(ui8CheckSum);
-
-	struct frame stSetRegFram(ui8PayloadLength, ui8Header, ui8CheckSum);
-	// Copy the payload
-	memcpy(stSetRegFram.ui8Payload, &i8RegVal, ui8PayloadLength);
+bool mc_interface_class::set_speed_Kp(int16_t i16SpeedVal) {
+	set_reg(REG_ID_SPEED_KP, sizeof(REG_TYPE_SPEED_KP), i16SpeedVal);
+	// Read back the response
 }
 
 uint8_t  mc_interface_class::get_firmware_version(uint8_t *pui8Buffer, uint8_t ui8BuffSize) {
