@@ -3,6 +3,8 @@
 #include<iostream>
 #include"mc_interface.hpp"
 
+using namespace std;
+
 void mc_interface_class::mc_interface_class() {
 	cout << "mc_interface_class constructor()\n";
 }
@@ -18,7 +20,8 @@ uint8_t mc_interface_class::set_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *
 	
 	// Create the frame message
 	friend class frame_class cSetRegFrame(ui8Header, ui8RegSize, pi8RegVal);
-	// Send the frame
+	// Get the frame 
+	uint8_t *pui8Buff = cSetRegFrame.get_frame();
 }
 
 bool mc_interface_class::set_speed_Kp(int16_t i16SpeedVal) {
