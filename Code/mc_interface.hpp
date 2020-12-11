@@ -14,7 +14,8 @@ class frame_class {
 public:
 	// Constructor
 	frame_class();
-
+	
+	// This constuctor is used when creating a send frame
 	frame_class(uint8_t header, uint8_t ui8length, uint8_t *pui8Payload) {
 		ui8FrameHeader = header; 
 		ui8PayloadLength = ui8length;
@@ -40,7 +41,7 @@ public:
 	uint8_t* get_frame() {
 		// Length of buffer
 		// header + payloadlength + payload + crc
-		uint8_t pui8FrameBuff = new uint8_t[3+ui8PayloadLength];
+		uint8_t pui8FrameBuff = new uint8_t[ui8FrameSize];
 		// Copy header
 		pui8FrameBuff[0] = ui8FrameHeader;
 		// Copy payload length

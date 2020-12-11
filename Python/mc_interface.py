@@ -7,6 +7,7 @@ Created on Thu Dec  3 20:41:49 2020
 """
 from serial import Serial
 import serial
+import math
 
 class MCInterface:
     
@@ -16,7 +17,10 @@ class MCInterface:
         self.parity = serial.PARITY_NONE;
         self.stopbits = serial.STOPBITS_ONE;
         self.bytesize = serial.EIGHTBITS;
-        self.timeout = timeout;
+        if -1 == timeout:
+            self.timeout = None
+        else:
+            self.timeout = timeout;
       
         self.serialPort = Serial (
                  port = self.port,
@@ -39,11 +43,18 @@ class MCInterface:
             self.serialPort.close();
             print("Serial port is successfully closed\n");
             
+    def read_junk_data(self):
+        x = self.serialPort.inWaiting();
+        if x > 0:
+            junk_data = self.serialPort.read(x);
+            print("Junk data", junk_data)
         
     ###########################################################################
     # Read Firmware
     ###########################################################################
     def read_firmware_version(self):
+        
+        self.read_junk_data();
         header = 0x06;
         payload_length = 0;
         checksum = header + payload_length;
@@ -57,18 +68,16 @@ class MCInterface:
         packet.append(checksum);
         self.serialPort.write(packet);
         # read the binary data
-        firmware_version = self.serialPort.read(32);
+        firmware_version = self.serialPort.read(35);
         
-        x = self.serialPort.inWaiting();
-        if x > 0:
-            junk_data = self.serialPort.read(x);
-            print(junk_data)
         return firmware_version       
 
     ###########################################################################
     # Read register
     ###########################################################################
     def read_register(self, reg, payload_length, reg_size):
+        self.read_junk_data();
+        
         header = 0x02;
         payload = reg;
         checksum = header + payload + payload_length;
@@ -85,7 +94,7 @@ class MCInterface:
         packet.append(checksum);
         self.serialPort.write(packet);
         
-        reg_response = self.serialPort.read(2+reg_size);
+        reg_response = self.serialPort.read(3+reg_size);
         
         print(reg_response);
         ack = reg_response[0];
@@ -108,6 +117,7 @@ class MCInterface:
     # Write register
     ###########################################################################
     def write_register(self, reg, reg_size, reg_value):
+        self.read_junk_data();
         header = 0x01;
         payload = reg;
         # Payload also contains the register to be written. Hence, it is +1
@@ -150,8 +160,11 @@ class MCInterface:
             # For a negative acknowledge, there is an associated errorcode
             # Read the error code
             #reg_response = serialPort.read(1);
-            errorCode = reg_response[1];
+            errorCode = reg_response[2];
             print("Error code is", errorCode);
+            # Because of error, the response contains one more message byte
+            # This byte corresponds to CRC
+            reg_response = self.serialPort.read(1);
             
         return success, errorCode;
     
@@ -159,6 +172,7 @@ class MCInterface:
     # Execute commands
     ###########################################################################
     def execute_command(self, command):
+        self.read_junk_data();
         header = 0x03;
         payload = command;
         payload_length = 1;
@@ -182,7 +196,7 @@ class MCInterface:
         
         # For a positive acknowledge, there is no error code
         # It seems like, the MC interface sends double acknowlegment
-        reg_response = self.serialPort.read(2);
+        reg_response = self.serialPort.read(3);
         
         success = False;
         print(reg_response);
@@ -195,8 +209,11 @@ class MCInterface:
             # For a negative acknowledge, there is an associated errorcode
             # Read the error code
             #reg_response = serialPort.read(1);
-            errorCode = reg_response[1];
+            errorCode = reg_response[2];
             print("Error code is", errorCode);
+            # Because of error, the response contains one more message byte
+            # This byte corresponds to CRC
+            reg_response = self.serialPort.read(1);
             
         return success, errorCode;    
     
@@ -204,6 +221,7 @@ class MCInterface:
     # Set RAMP
     ###########################################################################
     def set_ramp(self,rampValue, rampDuration):
+        self.read_junk_data();
         header = 0x07;
         payload = bytearray();
         m = rampValue.to_bytes(4, byteorder='big', signed=False);
@@ -246,8 +264,11 @@ class MCInterface:
             # For a negative acknowledge, there is an associated errorcode
             # Read the error code
             #reg_response = serialPort.read(1);
-            errorCode = reg_response[1];
+            errorCode = reg_response[2];
             print("Error code is", errorCode);
+            # Because of error, the response contains one more message byte
+            # This byte corresponds to CRC
+            reg_response = self.serialPort.read(1);
             
         return success, errorCode;
 
@@ -438,3 +459,20 @@ class MCInterface:
     
     def exec_cmd_iqdref_clear(self):
         return self.execute_command(0x09);
+    
+    ###########################################################################
+    # Create utility functions
+    ###########################################################################    
+    
+    def meas_current(self):
+        [s, iq, e] = self.read_flux_meas();
+        [s, id, e] = self.read_torque_meas();
+        # Rescale current values
+        iq = iq/10000;
+        id = id/10000;
+        i = math.sqrt(iq**2 + id**2);
+        
+        return i;
+        
+    
+    
