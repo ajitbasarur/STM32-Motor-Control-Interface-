@@ -35,8 +35,8 @@ extern "C" {
 
 // Create frame header
 #define FRAME_HEADER_MASK             0xFF
-#define FRAME_HEADER(M, F)            (((M&MOTOR_BIT_MASK)<<MOTOR_BIT_MASK | \\
-                                       (F&FRAME_CODE_MASK)<<FRAME_CODE_POS) & \\
+#define FRAME_HEADER(M, F)            (((M&MOTOR_BIT_MASK)<<MOTOR_BIT_MASK | \
+                                       (F&FRAME_CODE_MASK)<<FRAME_CODE_POS) & \
                                         FRAME_HEADER_MASK)
 
 // Define error codes
@@ -179,7 +179,7 @@ extern "C" {
 #define REG_TYPE_MIN_APP_SPEED       uint32_t
 
 #define REG_ID_IQ_SPEED_MODE         0x41
-#define REG_TYPE_MIN_APP_SPEED       int16_t
+#define REG_TYPE_IQ_SPEED_MODE       int16_t
 
 // Identification numbers of control and power board
 #define REG_ID_CTRBDID               0x72
