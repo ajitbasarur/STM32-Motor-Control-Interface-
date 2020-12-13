@@ -86,12 +86,15 @@ int32_t serial_port::port_read(uint8_t *ui8Buff, uint32_t ui32BuffSize){
 		return -1;
 	} else if(0 == i32received) {
 		cout << "serial port read timeout\n";
+	} else {
+		cout << "serial port read success " << i32received <<"\n";
 	}
 
 	return i32received;
 };
 
 int8_t serial_port::port_write(uint8_t *ui8Buff, uint32_t ui32BuffSize){
+	cout << "serial_port_write " << ui8Buff << "\n";
 	uint32_t ui32result = write(i16Fd, ui8Buff, ui32BuffSize);
 	if (ui32result != ui32BuffSize) {
 		cout << "failed to write to port";

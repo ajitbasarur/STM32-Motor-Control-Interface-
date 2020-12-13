@@ -52,6 +52,7 @@ public:
 		// Copy the checksum
 		pui8FrameBuff[ui8FrameSize-1] = ui8CheckSum;
 
+		cout << pui8FrameBuff;
 		return pui8FrameBuff;
 	}
 

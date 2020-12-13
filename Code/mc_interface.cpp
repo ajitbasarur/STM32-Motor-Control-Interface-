@@ -31,6 +31,7 @@ int8_t mc_interface_class::set_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *p
 	// Get the frame 
 	cout << "Getting the frame \n";
 	uint8_t *pui8Buff = cSetRegFrame.get_frame();
+	cout << pui8Buff[3] << "\n";
 	cout << "Getting the frame size\n";
 	uint8_t ui8BuffSize = cSetRegFrame.get_frame_size();
 
@@ -42,13 +43,18 @@ int8_t mc_interface_class::set_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *p
 	}
 	// Read the data
 	uint8_t* pui8ReadBuff = new uint8_t[5];
-	i8Return = spClass.port_write(pui8ReadBuff, 4);
+	i8Return = spClass.port_read(pui8ReadBuff, 4);
 	if(i8Return < 0) {
 		cout << "reg_read() failed\n";
 		return -1;
 	} else {
-		pui8ReadBuff[4] = '\n';
-		cout << "Register read response " << pui8ReadBuff << " \n";
+		//pui8ReadBuff[4] = '\n';
+		cout << "Register read response \n" ;
+		int8_t i = 0;
+		for(i=0; i<4; i++) {
+			cout << pui8ReadBuff[i] << " \n";
+		}
+		
 		return 0;
 	}
 	return 0;
