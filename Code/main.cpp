@@ -38,26 +38,46 @@ int main(){
 	mcInterface.encoder_align();
 	sleep(1);
 	cout << "Encoder alignment is over\n";
+
+	
+	sleep(0.1);
+#if 1
 	// Set the control mode to speed
 	cout << "Setting the control mode to speed\n";
 	if(mcInterface.set_control_mode(0) < 0) {
 		cout << "set_control_mode() failed \n";
 	}	
-	
-	sleep(0.1);
 	// Setting the speed
-	int32_t i32SpeedVal = 4000;
+	int32_t i32SpeedVal = 100;
 	cout << "Setting the speed to " << i32SpeedVal << " RPM\n" ;
 	if(mcInterface.set_speed_ramp(i32SpeedVal) < 0) {
 		cout << "set_speed_ramp() failed \n";
 	}	
+#else
+	// Set the control mode to current
+	cout << "Setting the control mode to current\n";
+	if(mcInterface.set_control_mode(1) < 0) {
+		cout << "set_control_mode() failed \n";
+	}	
+	// Setting the speed
+	int16_t i16TorqueRefVal = 0x1500;
+	cout << "Setting the current to " << i16TorqueRefVal << " mA\n" ;
+	if(mcInterface.set_torque_ref(i16TorqueRefVal) < 0) {
+		cout << "set_torque_ref() failed \n";
+	}		
+#endif	
+
+	sleep(1);
 	
 	// Starting the motor
-	cout << "Starting the motor\n";
-	mcInterface.start_motor();
+	mcInterface.fault_ack();
 	sleep(1);
+	cout << "Starting the motor\n";
+	mcInterface.start_stop_motor();
+	mcInterface.start_stop_motor();
+	sleep(5);
 	cout << "Stopping the motor\n";
-	mcInterface.stop_motor();
+	mcInterface.start_stop_motor();
 	cout << "Ending the application \n";
 
 	return 0;
