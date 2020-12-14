@@ -10,10 +10,10 @@ A reference master control code based on the frame communication protocol is imp
 
 ---------------------
 To compile C++ code:
-\fbox{cd source_dir
+cd source_dir
 cd Code/C++
 g++ -o test_motor_interface.o *.cpp *.h
-!}
+
 
 ---------------------
 To execute C++ code
