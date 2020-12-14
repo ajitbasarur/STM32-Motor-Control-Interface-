@@ -9,10 +9,11 @@ In this code, a frame communication protocol is implemented on host PC side that
 A reference master control code based on the frame communication protocol is implemented in C++ and Python programming languages. Developers can either use C++ environment or Python environment.
 
 ---------------------
-To compile C++ code
-cd source_dir
+To compile C++ code:
+\fbox{cd source_dir
 cd Code/C++
 g++ -o test_motor_interface.o *.cpp *.h
+!}
 
 ---------------------
 To execute C++ code
