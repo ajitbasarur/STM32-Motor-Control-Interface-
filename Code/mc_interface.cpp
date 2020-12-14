@@ -21,21 +21,15 @@ int8_t mc_interface_class::init(const char* device) {
 
 // Set the 8-bit register
 int8_t mc_interface_class::set_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *pi8RegVal) {
-	cout << "Creating the frame header\n";
 	// Create header
 	uint8_t ui8Header = FRAME_HEADER(MOTOR_NUMBER, FRAME_CODE_SET_REG);
 	
-	cout << "Creating the frame message\n";
 	// Create the frame message
-	class frame_class cSetRegFrame(ui8Header, ui8RegSize, (uint8_t *)pi8RegVal);
+	class frame_class cSetRegFrame(ui8Header, ui8Reg, ui8RegSize, (uint8_t *)pi8RegVal);
 	// Get the frame 
-	cout << "Getting the frame \n";
 	uint8_t *pui8Buff = cSetRegFrame.get_frame();
-	cout << pui8Buff[3] << "\n";
-	cout << "Getting the frame size\n";
 	uint8_t ui8BuffSize = cSetRegFrame.get_frame_size();
 
-	cout << "Writing to the serial port\n";
 	int8_t i8Return = spClass.port_write(pui8Buff, ui8BuffSize);
 	if(i8Return < 0) {
 		cout << "set_reg() failed\n";
@@ -47,16 +41,8 @@ int8_t mc_interface_class::set_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *p
 	if(i8Return < 0) {
 		cout << "reg_read() failed\n";
 		return -1;
-	} else {
-		//pui8ReadBuff[4] = '\n';
-		cout << "Register read response \n" ;
-		int8_t i = 0;
-		for(i=0; i<4; i++) {
-			cout << pui8ReadBuff[i] << " \n";
-		}
-		
-		return 0;
-	}
+	} 
+	
 	return 0;
 }
 

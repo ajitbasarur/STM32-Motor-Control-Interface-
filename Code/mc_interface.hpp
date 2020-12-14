@@ -4,7 +4,7 @@
 #include<iostream>
 // Used for including fixed integer types
 #include<cstdint>
-
+#include<cstring>
 //Frame communication protocol header file
 #include"frame_communication_protocol.h"
 #include "serial_port.hpp"
@@ -15,15 +15,14 @@ class frame_class {
 public:
 	
 	// This constuctor is used when creating a send frame
-	frame_class(uint8_t header, uint8_t ui8length, uint8_t *pui8Payload) {
+	frame_class(uint8_t header, uint8_t ui8Reg, uint8_t ui8length, uint8_t *pui8Payload) {
 		ui8FrameHeader = header; 
-		ui8PayloadLength = ui8length;
-		this->pui8Payload = new uint8_t[ui8length];
+		ui8PayloadLength = ui8length+1;
+		this->pui8Payload = new uint8_t[ui8PayloadLength];
 		// Copy the payload
-		cout << "Copying the data \n";
-		memcpy(this->pui8Payload, pui8Payload, ui8PayloadLength);
+		this->pui8Payload[0] = ui8Reg;
+		std::memcpy(&this->pui8Payload[1], pui8Payload, ui8length);
 		// Compute the checksum
-		cout << "Computing the checksum \n";
 		compute_checksum();
 		ui8FrameSize = 3 + ui8PayloadLength;
 	}
@@ -48,11 +47,11 @@ public:
 		// Copy payload length
 		pui8FrameBuff[1] = ui8PayloadLength;
 		// Copy the payload
-		memcpy(&pui8FrameBuff[2], pui8Payload, ui8PayloadLength);
+		std::memcpy(&pui8FrameBuff[2], pui8Payload, ui8PayloadLength);
 		// Copy the checksum
 		pui8FrameBuff[ui8FrameSize-1] = ui8CheckSum;
 
-		cout << pui8FrameBuff;
+		//cout << pui8FrameBuff;	
 		return pui8FrameBuff;
 	}
 

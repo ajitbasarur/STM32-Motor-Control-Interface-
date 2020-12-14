@@ -1,4 +1,5 @@
 #include "serial_port.hpp"
+#include <iomanip>
 
 // serial port access source for MacOS is taken from the below website
 // https://www.pololu.com/docs/0J73/15.5
@@ -87,14 +88,22 @@ int32_t serial_port::port_read(uint8_t *ui8Buff, uint32_t ui32BuffSize){
 	} else if(0 == i32received) {
 		cout << "serial port read timeout\n";
 	} else {
-		cout << "serial port read success " << i32received <<"\n";
+		cout << "serial port read success " << "\n";
+		for(size_t i = 0; i < ui32BuffSize; ++i) {
+			printf("0x%02X \t", ui8Buff[i]);
+		}
+		printf("\n");		
 	}
 
 	return i32received;
 };
 
 int8_t serial_port::port_write(uint8_t *ui8Buff, uint32_t ui32BuffSize){
-	cout << "serial_port_write " << ui8Buff << "\n";
+	cout << "serial_port_write " <<  "\n";
+	for(size_t i = 0; i < ui32BuffSize; ++i) {
+		printf("0x%02X\t", ui8Buff[i]);
+	}
+	printf("\n");		
 	uint32_t ui32result = write(i16Fd, ui8Buff, ui32BuffSize);
 	if (ui32result != ui32BuffSize) {
 		cout << "failed to write to port";

@@ -10,7 +10,8 @@ int main(){
 	class mc_interface_class mcInterface;
 
 	cout << "Starting the application \n";
-	mcInterface.init("/dev/cu.usbmodem14203");
+	//mcInterface.init("/dev/cu.usbmodem14203");
+	mcInterface.init("/dev/ttyACM0");
 	cout << "Initialization done \n";
 	mcInterface.set_speed_Kp(1200);
 
