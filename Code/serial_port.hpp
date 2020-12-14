@@ -18,6 +18,7 @@ public:
 	void port_close(void);
 	int32_t port_read(uint8_t *ui8Buff, uint32_t ui32BuffSize);
 	int8_t port_write(uint8_t *ui8Buff, uint32_t ui32BuffSize);
+	void flush(void);
 
 private:
 	int16_t i16Fd;

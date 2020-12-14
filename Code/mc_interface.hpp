@@ -21,11 +21,14 @@ public:
 		this->pui8Payload = new uint8_t[ui8PayloadLength];
 		// Copy the payload
 		this->pui8Payload[0] = ui8Reg;
-		std::memcpy(&this->pui8Payload[1], pui8Payload, ui8length);
+		if((NULL != pui8Payload) || (0!= ui8length)) {
+			std::memcpy(&this->pui8Payload[1], pui8Payload, ui8length);
+		}
 		// Compute the checksum
 		compute_checksum();
 		ui8FrameSize = 3 + ui8PayloadLength;
 	}
+	
 
 	// Destructor
 	~frame_class(){
@@ -101,10 +104,24 @@ public:
 
 	// Define APIs for the applications
 	// Set register APIs
-	bool set_speed_Kp(int16_t i16SpeedVal);
+	int8_t set_speed_Kp(int16_t i16SpeedVal);
+	int8_t set_speed_ramp(int32_t i32SpeedRampVal) ;
+	int8_t set_control_mode(int8_t i8ControlMode);
+	int8_t set_torque_ref(int16_t i16TorqueRefVal);
+	int8_t set_flux_ref(int16_t i16FluxRefVal);
 
 	// Get register APIs
 	int16_t get_speed_Kp();
+	uint16_t get_heat_sink_temp(void) ;
+	uint16_t get_bus_voltage(void) ;
+	
+	// Execute command APIs
+	int8_t start_stop_motor(void);
+	int8_t encoder_align(void);
+	int8_t fault_ack(void);
+	int8_t start_motor(void);
+	int8_t stop_motor(void);
+	int8_t stop_ramp(void);
 	
 	// Initialize the serial port interface
 	int8_t init(const char* device);
@@ -113,9 +130,9 @@ private:
 	int8_t set_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *pi8RegVal);
 
 	// Get register
-	uint8_t get_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *i8RegVal);
+	int8_t get_reg(uint8_t ui8Reg, uint8_t ui8RegSize, int8_t *i8RegVal);
 
-	uint8_t execute_command(uint8_t ui8Command);
+	int8_t execute_command(uint8_t ui8Command);
 
 	uint8_t get_board_info(uint8_t *pui8Buffer, uint8_t ui8BuffSize);
 
@@ -125,6 +142,34 @@ private:
 
 	uint8_t get_firmware_version(uint8_t *pui8Buffer, uint8_t ui8BuffSize);		
 
+private:
+	// Private function declarations
+	// Compute Checksum
+	int8_t validate_checksum(uint8_t *pui8Buffer, uint8_t ui8BuffSize, uint8_t ui8Crc) {
+		// ucounter
+		uint8_t i = 0;
+		uint8_t ui8CheckSum = 0;
+		// Compute the accumulator
+		uint16_t ui16Accumulator = 0;
+		
+		// Compute the sum of all payloads
+		if (NULL != pui8Buffer){
+			for(i=0;i<ui8BuffSize;i++) {
+				ui16Accumulator += (pui8Buffer[i] & 0xFF);
+			}
+		}
+		
+		// Low-byte
+		ui8CheckSum = ui16Accumulator & 0xFF;
+		// High-byte
+		ui8CheckSum += (ui16Accumulator>>8 & 0xFF);
+		
+		if (ui8CheckSum == ui8Crc) {
+			return 0;
+		} else {
+			return -1;
+		}
+	}	
 	// Private variables declaration
 private:
 	class serial_port spClass;
