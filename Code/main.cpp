@@ -39,16 +39,22 @@ int main(){
 	sleep(1);
 	cout << "Encoder alignment is over\n";
 
+	// Starting the motor
+	mcInterface.fault_ack();
 	
-	sleep(0.1);
-#if 1
+	cout << "Starting the motor\n";
+	mcInterface.stop_motor();
+	
+	sleep(1);
+	
+#if 0
 	// Set the control mode to speed
 	cout << "Setting the control mode to speed\n";
 	if(mcInterface.set_control_mode(0) < 0) {
 		cout << "set_control_mode() failed \n";
 	}	
 	// Setting the speed
-	int32_t i32SpeedVal = 100;
+	int32_t i32SpeedVal = 1000;
 	cout << "Setting the speed to " << i32SpeedVal << " RPM\n" ;
 	if(mcInterface.set_speed_ramp(i32SpeedVal) < 0) {
 		cout << "set_speed_ramp() failed \n";
@@ -67,13 +73,6 @@ int main(){
 	}		
 #endif	
 
-	sleep(1);
-	
-	// Starting the motor
-	mcInterface.fault_ack();
-	sleep(1);
-	cout << "Starting the motor\n";
-	mcInterface.start_stop_motor();
 	mcInterface.start_stop_motor();
 	sleep(5);
 	cout << "Stopping the motor\n";

@@ -1,7 +1,7 @@
 #include "serial_port.hpp"
 #include <iomanip>
 
-#define DEBUG_PRINTS
+#undef DEBUG_PRINTS
 // serial port access source for MacOS is taken from the below website
 // https://www.pololu.com/docs/0J73/15.5
 // The reference source code is wrapped in C++ to be used with 
