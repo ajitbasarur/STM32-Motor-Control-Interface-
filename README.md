@@ -26,9 +26,9 @@ Python environment does not need any compilation. But it requires PySerial inter
 
 -----------------------------------
 ## Testing environment <br>
-1. Nucelo-F746ZG + IHM08M1 motor controller board is used.
+1. [Nucelo-F746ZG](https://www.st.com/en/evaluation-tools/nucleo-f746zg.html) + [IHM08M1](https://www.st.com/en/ecosystems/x-nucleo-ihm08m1.html) motor controller board is used.
 2. A standard BLDC motor with an external magnetic resolver. 
-3. Motor Control Workbech 5.4.4. is used for motor and board configuration.
+3. [Motor Control Workbech 5.4.4.](https://www.st.com/en/embedded-software/x-cube-mcsdk.html) is used for motor and board configuration.
 4. Ubuntu 18.04 LTS is used as a host PC.
 5. Nucelo-F746ZG is connected to the host PC using USB port.
 
