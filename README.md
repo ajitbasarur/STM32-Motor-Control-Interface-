@@ -10,18 +10,19 @@
 
 ---------------------
 To compile C++ code: <br>
-cd source_dir <br>
-cd Code/C++ <br>
-g++ -o test_motor_interface.o *.cpp *.h <br>
-
-
+<ol>
+<li>cd source_dir</li>
+<li>cd Code/C++</li>
+<li>g++ -o test_motor_interface.o *.cpp *.h</li>
+</ol> 
 ---------------------
 To execute C++ code <br>
 sudo ./test_motor_interface.o <br>
-
 
 -----------------------------------
 Python environment does not need any compilation. But it requires PySerial interface. Install it before the first use. <br>
 
 -----------------------------------
+Testing environment <br>
+1. 
 
