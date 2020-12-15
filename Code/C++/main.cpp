@@ -11,16 +11,16 @@ using namespace std;
 
 #ifdef COMMAND_LINE_PARSE
 void command_parse_help(){
-	cout << "Speed control mode --> ./test_gearbox.o mode 0 \n";
-	cout << "Torque control mode --> ./test_gearbox.o mode 1 \n";
-	cout << "Set the speed  to 2000 RPM --> ./test_gearbox.o speed 2000 \n";
-	cout << "Set the speed  to -3000 RPM --> ./test_gearbox.o speed -3000 \n";
-	cout << "Set the torque/current  to 12000 mA --> ./test_gearbox.o torque 12000 \n";
-	cout << "Set the torque/current  to -5000 mA --> ./test_gearbox.o torque -5000 \n";
-	cout << "Start the encoder alignment --> ./test_gearbox.o align \n";
-	cout << "Start the motor --> ./test_gearbox.o start \n";
-	cout << "Stop the motor --> ./test_gearbox.o stop \n";
-	cout << "Toggle the start stop  --> ./test_gearbox.o toggle_start_stop \n";
+	cout << "Speed control mode --> ./test_motor_interface.o mode 0 \n";
+	cout << "Torque control mode --> ./test_motor_interface.o mode 1 \n";
+	cout << "Set the speed  to 2000 RPM --> ./test_motor_interface.o speed 2000 \n";
+	cout << "Set the speed  to -3000 RPM --> ./test_motor_interface.o speed -3000 \n";
+	cout << "Set the torque/current  to 12000 mA --> ./test_motor_interface.o torque 12000 \n";
+	cout << "Set the torque/current  to -5000 mA --> ./test_motor_interface.o torque -5000 \n";
+	cout << "Start the encoder alignment --> ./test_motor_interface.o align \n";
+	cout << "Start the motor --> ./test_motor_interface.o start \n";
+	cout << "Stop the motor --> ./test_motor_interface.o stop \n";
+	cout << "Toggle the start stop  --> ./test_motor_interface.o toggle_start_stop \n";
 };
 #endif 
 
