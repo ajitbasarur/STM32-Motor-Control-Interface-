@@ -1,27 +1,126 @@
 #include <cstdio>
 #include <iostream>
 #include <cstdint>
-
+#include <cstring>
+#include <sstream>
 #include "mc_interface.hpp"
 
 using namespace std;
 
+#define COMMAND_LINE_PARSE
 
-int main(){
+#ifdef COMMAND_LINE_PARSE
+void command_parse_help(){
+	cout << "Speed control mode --> ./test_gearbox.o mode 0 \n";
+	cout << "Torque control mode --> ./test_gearbox.o mode 1 \n";
+	cout << "Set the speed  to 2000 RPM --> ./test_gearbox.o speed 2000 \n";
+	cout << "Set the speed  to -3000 RPM --> ./test_gearbox.o speed -3000 \n";
+	cout << "Set the torque/current  to 12000 mA --> ./test_gearbox.o torque 12000 \n";
+	cout << "Set the torque/current  to -5000 mA --> ./test_gearbox.o torque -5000 \n";
+	cout << "Start the encoder alignment --> ./test_gearbox.o align \n";
+	cout << "Start the motor --> ./test_gearbox.o start \n";
+	cout << "Stop the motor --> ./test_gearbox.o stop \n";
+	cout << "Toggle the start stop  --> ./test_gearbox.o toggle_start_stop \n";
+};
+#endif 
+
+
+int main(int argc, char * argv[]){
 	class mc_interface_class mcInterface;
 
 	cout << "Starting the application \n";
+
+	//mcInterface.init("/dev/cu.usbmodem14203");
+	if(mcInterface.init("/dev/ttyACM0") < 0) {
+		cout << "mc_init() failed\n";
+		return -1;
+	}
+	cout << "Initialization done. \n";
+	
+#ifdef COMMAND_LINE_PARSE
+	int i = 0;
+	cout << "Printing all the arguments \n";
+	for(i=0; i< argc; i++) {
+		cout << argv[i] << "\t";
+	}
+	cout << "\n";
+
+		
+	if (argc < 2) {
+		cout <<" No valid number of input arguments. Exiting the program\n";
+		return -1;
+	}
+	string command(argv[1]);
+	
+	if(0 == command.compare("mode")) {
+		stringstream ssValue(argv[2]);
+		int16_t i16Val = 0;
+		ssValue >> i16Val;
+		if(0 == i16Val) {
+				cout << "Setting to speed mode\n";
+		} else if(1 == i16Val) {
+			cout << "Setting to torque mode\n";
+		} else {
+			cout << "Invalid mode " << i16Val << "\n";
+		}
+		if(mcInterface.set_control_mode(i16Val) < 0) {
+			cout << "set_control_mode() failed \n";
+			}	
+	} else if (0 == command.compare("speed")) {
+		stringstream ssValue(argv[2]);
+		int32_t i32Val = 0;
+		ssValue >> i32Val;
+		cout << "Setting speed to " << i32Val  <<" RPM\n";
+		if(mcInterface.set_speed_ramp(i32Val) < 0) {
+			cout << "set_speed_ramp() failed \n";
+		}			
+	}	else if (0 == command.compare("torque")) {
+		stringstream ssValue(argv[2]);
+		int16_t i16Val = 0;
+		ssValue >> i16Val;
+		cout << "Setting torque to " << i16Val  <<" mA\n";
+		if(mcInterface.set_torque_ref(i16Val) < 0) {
+			cout << "set_torque_ref() failed \n";
+		}			
+	}	else if (0 == command.compare("toggle_start_stop")) {
+		cout << "Toggling start stop \n";
+		if(mcInterface.start_stop_motor() < 0) {
+			cout << "start_stop_motor() failed \n";
+			}
+	} else if (0 == command.compare("start")) {
+		cout << "Starting the motor\n";
+		if(mcInterface.start_motor() < 0) {
+			cout << "start_motor() failed \n";
+			}		
+	} else if (0 == command.compare("stop")) {
+		cout << "Stopping the motor\n";
+		if(mcInterface.stop_motor() < 0) {
+			cout << "stop_motor() failed \n";
+			}				
+	} else if (0 == command.compare("align")) {
+		cout << "Encoder alignment\n";
+		if(mcInterface.encoder_align() < 0) {
+			cout << "encoder_align() failed \n";
+			}				
+	}	else {
+		cout << "Invalid argument. Provide on of the following arguments\n";
+		command_parse_help();
+		
+	}
+	cout << "Ending the application \n";
+
+#else	
+
 	//mcInterface.init("/dev/cu.usbmodem14203");
 	mcInterface.init("/dev/ttyACM0");
-	cout << "Initialization done \n";
-#if 0	
+	cout << "Initialization done. \n";
+
 	if(mcInterface.set_speed_Kp(1510) < 0) {
 		cout << "set_speed_Kp() failed \n";
 	}
 	int16_t i16KpValue;
 	i16KpValue = mcInterface.get_speed_Kp();
 	cout << "Kp value is " << i16KpValue << endl;
-#endif
 
 	// Reading the heat sink temperature
 	uint16_t get_bus_voltage;
@@ -78,6 +177,6 @@ int main(){
 	cout << "Stopping the motor\n";
 	mcInterface.start_stop_motor();
 	cout << "Ending the application \n";
-
+#endif // COMMAND_LINE_PARSE
 	return 0;
 };
