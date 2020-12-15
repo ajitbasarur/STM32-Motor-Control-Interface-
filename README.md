@@ -1,3 +1,6 @@
+
+
+
 # ST Motor Control Interface Application
 
 <p> STM32 provides off-the-shelf motor control libraries for BLDC and PMSM motors. The motor control libraries can be generated using Motor Control Software Development Kit (MCSDK). For on-board control, motor control interface is available. To control the motor using an external microprocessor or host PC, there exists a frame communication protocol. </p>
@@ -6,7 +9,9 @@
 
 <p> In this code, a frame communication protocol is implemented on host PC side that acts as a master. The underlying operating system is assumed to linux. The goal is to control the Nucelo boards over Rasp Pi. </p>
 
-<p> A reference master control code based on the frame communication protocol is implemented in C++ and Python programming languages. Developers can either use C++ environment or Python environment. </p>
+<p> More details about the communication protocol can be found in the documentation folder of this repository <p>
+
+<p> A reference master control code based on the frame communication protocol is implemented in both C++ and Python programming languages. Developers can either use C++ environment or Python environment. </p>
 
 ---------------------
 ## To compile and execute C++ code: <br>
