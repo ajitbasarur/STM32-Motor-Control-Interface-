@@ -9,7 +9,7 @@
 
 <p> In this code, a frame communication protocol is implemented on host PC side that acts as a master. The underlying operating system is assumed to linux. The goal is to control the Nucelo boards over Rasp Pi. </p>
 
-<p> More details about the communication protocol can be found in the documentation folder of this repository <p>
+<p> More details about the communication protocol can be found in the Documentation folder of this repository. <p>
 
 <p> A reference master control code based on the frame communication protocol is implemented in both C++ and Python programming languages. Developers can either use C++ environment or Python environment. </p>
 
