@@ -1,7 +1,6 @@
 
-
-
 # ST Motor Control Interface Application
+#### Frame Communication Protocol Library + Application
 
 <p> STM32 provides off-the-shelf motor control libraries for BLDC and PMSM motors. The motor control libraries can be generated using Motor Control Software Development Kit (MCSDK). For on-board control, motor control interface is available. To control the motor using an external microprocessor or host PC, there exists a frame communication protocol. </p>
 
